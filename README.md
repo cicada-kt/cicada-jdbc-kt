@@ -41,17 +41,17 @@ val dao = JdbcDao.Builder {
 
 ```kotlin
 dao {
-    val foo = Foo(null, "test", "code")
+    val foo = Foo(null, "name", "code")
     insert(foo) // insert a row to table foo
-    foo.fooId = 1 
+    foo.fooName = "New Name"
     update(foo) // update all fields in foo by foo's id
     delete(foo) // delete a foo row by foo's id
     delete<Foo>(1) // delete a foo row by id = 1
     list<Foo> { // query a list result by a sql 
-        + "select ${cols<>().removeIdCols()} " // 
-        + "from ${table<>()} as c "
-        + "where c.${col(::chuannerId)} = ${param(1)} "
-        + { "and c.${col(::chuannerName)} = ${param("2"!!)} " }
+        + "select ${cols<Foo>().removeIdCols()} " // all fields except id in the foo 
+        + "from ${table<Foo>()} as c "
+        + "where c.${col(Foo::fooId)} = ${param(1)} " // add parameter
+        + { "and c.${col(Foo::fooName)} = ${param(null!!)} " } // when a parameter is null, the part in this block will not in sql and parameter list
     }
 }
 ```
