@@ -1,0 +1,63 @@
+group 'cn.org.cicada'
+version '1.0.1'
+
+buildscript {
+    ext.kotlin_version = '1.1.4-2'
+
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'kotlin'
+apply plugin: 'maven'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.6"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.6"
+}
+
+//打包源代码
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+uploadArchives {
+    configuration = configurations.archives
+    repositories {
+        mavenDeployer {
+            snapshotRepository(url: 'http://192.168.37.99:8081/nexus/content/repositories/snapshots/') {
+                authentication(userName: "admin", password: "admin123")
+            }
+            repository(url: 'http://192.168.37.99:8081/nexus/content/repositories/releases/') {
+                authentication(userName: "admin", password: "admin123")
+            }
+            pom.project {
+                version "${project.version}"
+                artifactId "${project.name}"
+                groupId "${project.group}"
+            }
+        }
+    }
+}
