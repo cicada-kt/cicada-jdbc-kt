@@ -9,5 +9,8 @@ Cicada Jdbc for Kotlin
 
 cicada-jdbc-kt is a very simple and very useful sql builder. it is very easy to use and configure.
 
+cicada-jdbc-kt allow you:
+
+- mapping a database table to a entity class
 
 
