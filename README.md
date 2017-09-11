@@ -11,6 +11,7 @@ cicada-jdbc-kt is a very simple and very useful sql builder. it is very easy to 
 
 cicada-jdbc-kt allow you:
 
-- mapping a database table to a entity class
-
+- Mapping a database table to an entity class
+- Insert / Delete and Update a row data without sql
+- Easily build sql and parameters
 
