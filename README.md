@@ -13,5 +13,45 @@ cicada-jdbc-kt allow you:
 
 - Mapping a database table to an entity class
 - Insert / Delete and Update a row data without sql
-- Easily build sql and parameters
+- Easily build sql and parameter list
 
+An example is always better than a thousand words:
+
+Define entity:
+
+```kotlin
+@Entity
+data class Foo(
+        @Id(autoincrement = true) @Column var fooId: Int,
+        @Column(length = 32) var fooName: String,
+        @Column(length = 32) var fooCode: String
+)
+```
+
+Build a JdbcDao to begin
+
+```kotlin
+val dao = JdbcDao.Builder {
+    mysql()
+    provider = SpringJdbcDaoProvider(JdbcTemplate(DriverManagerDataSource(
+            "jdbc:mysql://localhost:3306/chuanner",
+            "root", "root")))
+}.build()
+```
+
+```kotlin
+dao {
+    val foo = Foo(null, "test", "code")
+    insert(foo) // insert a row to table foo
+    foo.fooId = 1 
+    update(foo) // update all fields in foo by foo's id
+    delete(foo) // delete a foo row by foo's id
+    delete<Foo>(1) // delete a foo row by id = 1
+    list<Foo> { // query a list result by a sql 
+        + "select ${cols<>().removeIdCols()} " // 
+        + "from ${table<>()} as c "
+        + "where c.${col(::chuannerId)} = ${param(1)} "
+        + { "and c.${col(::chuannerName)} = ${param("2"!!)} " }
+    }
+}
+```
