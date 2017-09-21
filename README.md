@@ -51,7 +51,8 @@ dao {
         + "select ${cols<Foo>().removeIdCols()} " // all fields except id in the foo 
         + "from ${table<Foo>()} as c "
         + "where c.${col(Foo::fooId)} = ${param(1)} " // add parameter
-        + { "and c.${col(Foo::fooName)} = ${param(null!!)} " } // when a parameter is null, the part in this block will not in sql and parameter list
+        // when a parameter is null, the part in this block will not in sql and parameter list
+        + { "and c.${col(Foo::fooName)} = ${param(null!!)} " } 
     }
 }
 ```
